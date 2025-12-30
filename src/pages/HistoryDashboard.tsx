@@ -133,9 +133,10 @@ export function HistoryDashboard() {
 
       // Recarregar lista
       await loadGenerations()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao excluir análise:', error)
-      alert('Erro ao excluir análise. Tente novamente.')
+      const errorMessage = error?.message || 'Erro ao excluir análise. Tente novamente.'
+      alert(errorMessage)
     } finally {
       setDeletingId(null)
     }

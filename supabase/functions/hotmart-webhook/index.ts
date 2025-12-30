@@ -1,9 +1,42 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+/**
+ * Lista de origens permitidas para CORS (whitelist)
+ * Webhooks geralmente não precisam de CORS, mas mantemos por segurança
+ */
+const ALLOWED_ORIGINS: string[] = [
+  // Webhooks geralmente não têm origem (origin), mas mantemos a lista vazia por padrão
+  // Se precisar permitir alguma origem específica para debug/teste, adicione aqui
+]
+
+/**
+ * Função para gerar headers CORS baseados na origem da requisição
+ * Retorna headers com Access-Control-Allow-Origin apenas se a origem estiver na whitelist
+ * ou for um subdomínio da Vercel (.vercel.app)
+ * Para webhooks, geralmente não retorna Allow-Origin (mais seguro)
+ */
+function getCorsHeaders(req: Request): Record<string, string> {
+  const origin = req.headers.get('origin')
+  
+  const headers: Record<string, string> = {
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  }
+
+  // Verifica se a origem está na whitelist ou é um subdomínio da Vercel
+  const isAllowed = origin && (
+    (ALLOWED_ORIGINS.length > 0 && ALLOWED_ORIGINS.includes(origin)) || 
+    origin.endsWith('.vercel.app')
+  )
+
+  if (isAllowed) {
+    headers['Access-Control-Allow-Origin'] = origin
+    headers['Access-Control-Allow-Credentials'] = 'true'
+  }
+  // Webhooks não devem ter Allow-Origin por padrão (mais seguro)
+
+  return headers
 }
 
 // Função para enviar email de boas-vindas com credenciais
@@ -114,11 +147,114 @@ async function sendWelcomeEmail(
 Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: getCorsHeaders(req) })
   }
 
   try {
-    const webhookData = await req.json()
+    // ============================================
+    // VERIFICAÇÃO DE SEGURANÇA - Autenticação do Webhook
+    // ============================================
+    const hotmartSecret = Deno.env.get('HOTMART_SECRET')
+    
+    if (!hotmartSecret) {
+      console.error('❌ CRÍTICO: HOTMART_SECRET não configurada no ambiente. Webhook vulnerável!')
+      console.error('⚠️ Configure a variável HOTMART_SECRET no Supabase Dashboard > Settings > Edge Functions')
+      // Em produção, você pode escolher entre:
+      // 1. Bloquear todas as requisições (mais seguro)
+      // 2. Apenas alertar e continuar (menos seguro, mas não quebra em desenvolvimento)
+      // Vamos bloquear por segurança:
+      return new Response(
+        JSON.stringify({ 
+          error: 'Configuração de segurança ausente. Contate o administrador.',
+        }),
+        {
+          status: 500,
+          headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
+        }
+      )
+    }
+
+    // Ler o body primeiro para verificar o token (Hotmart pode enviar no body)
+    // Mas precisamos ler como texto para não consumir o stream
+    const bodyText = await req.text()
+    let webhookData: any
+    
+    try {
+      webhookData = JSON.parse(bodyText)
+    } catch (parseError) {
+      return new Response(
+        JSON.stringify({ error: 'Body inválido. JSON malformado.' }),
+        {
+          status: 400,
+          headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
+        }
+      )
+    }
+
+    // Verificar token de autenticação do webhook Hotmart
+    // Hotmart pode enviar o token no header X-Hotmart-Hottok OU no campo 'hottok' do body
+    const headerToken = req.headers.get('X-Hotmart-Hottok')
+    const bodyToken = webhookData.hottok || webhookData.token || webhookData.secret
+    
+    const receivedToken = headerToken || bodyToken
+    const tokenUsedFromBody = !headerToken && !!bodyToken // Flag para não usar hottok como transactionCode depois
+
+    if (!receivedToken) {
+      console.warn('⚠️ Tentativa de acesso ao webhook sem token de autenticação')
+      console.warn(`   IP: ${req.headers.get('x-forwarded-for') || 'unknown'}`)
+      console.warn(`   User-Agent: ${req.headers.get('user-agent') || 'unknown'}`)
+      
+      return new Response(
+        JSON.stringify({ error: 'Token de autenticação não fornecido' }),
+        {
+          status: 401,
+          headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
+        }
+      )
+    }
+
+    // Comparação segura de strings (timing-safe)
+    // Usar crypto.subtle para comparação constante-time
+    const encoder = new TextEncoder()
+    const receivedTokenBytes = encoder.encode(receivedToken)
+    const secretBytes = encoder.encode(hotmartSecret)
+    
+    // Comparação timing-safe usando crypto.subtle
+    if (receivedTokenBytes.length !== secretBytes.length) {
+      console.warn('⚠️ Tentativa de acesso com token de tamanho incorreto')
+      return new Response(
+        JSON.stringify({ error: 'Token de autenticação inválido' }),
+        {
+          status: 401,
+          headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
+        }
+      )
+    }
+
+    // Comparação timing-safe manual (protege contra timing attacks)
+    let isValid = true
+    for (let i = 0; i < receivedTokenBytes.length; i++) {
+      if (receivedTokenBytes[i] !== secretBytes[i]) {
+        isValid = false
+      }
+    }
+
+    if (!isValid) {
+      console.warn('⚠️ Tentativa de acesso ao webhook com token inválido')
+      console.warn(`   IP: ${req.headers.get('x-forwarded-for') || 'unknown'}`)
+      console.warn(`   User-Agent: ${req.headers.get('user-agent') || 'unknown'}`)
+      console.warn(`   Token recebido (primeiros 4 chars): ${receivedToken.substring(0, 4)}***`)
+      
+      return new Response(
+        JSON.stringify({ error: 'Token de autenticação inválido' }),
+        {
+          status: 401,
+          headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
+        }
+      )
+    }
+
+    console.log('✅ Webhook autenticado com sucesso')
 
     // Verificar se o status é APPROVED
     if (webhookData.status !== 'APPROVED') {
@@ -126,7 +262,7 @@ Deno.serve(async (req) => {
         JSON.stringify({ message: 'Status não aprovado', status: webhookData.status }),
         {
           status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
         }
       )
     }
@@ -140,7 +276,7 @@ Deno.serve(async (req) => {
         JSON.stringify({ error: 'Email não encontrado no webhook' }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
         }
       )
     }
@@ -149,10 +285,11 @@ Deno.serve(async (req) => {
     // IMPORTANTE: O cliente encontra esse código em:
     // 1. Email de confirmação da Hotmart (enviado após compra aprovada)
     // 2. Área do membro: https://consumer.hotmart.com → Minhas Compras → Detalhes
+    // NOTA: Não usar webhookData.hottok como transactionCode se foi usado para autenticação
     const transactionCode = 
       webhookData.transaction || 
       webhookData.purchase_code || 
-      webhookData.hottok || 
+      (tokenUsedFromBody ? null : webhookData.hottok) || // Só usar hottok se não foi usado para auth
       webhookData.transaction_code ||
       webhookData.data?.transaction ||
       webhookData.data?.purchase_code ||
@@ -265,7 +402,7 @@ Deno.serve(async (req) => {
       }),
       {
         status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       }
     )
   } catch (error) {
@@ -276,7 +413,7 @@ Deno.serve(async (req) => {
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       }
     )
   }

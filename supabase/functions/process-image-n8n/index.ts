@@ -1,15 +1,48 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+/**
+ * Lista de origens permitidas para CORS (whitelist)
+ * Adicione aqui os domínios que devem ter acesso às Edge Functions
+ */
+const ALLOWED_ORIGINS = [
+  'http://localhost:5173', // Desenvolvimento local (Vite padrão)
+  'http://localhost:3000', // Desenvolvimento local (porta alternativa)
+  // 'https://meu-app.com', // Descomente e adicione seu domínio de produção
+]
+
+/**
+ * Função para gerar headers CORS baseados na origem da requisição
+ * Retorna headers com Access-Control-Allow-Origin apenas se a origem estiver na whitelist
+ * ou for um subdomínio da Vercel (.vercel.app)
+ */
+function getCorsHeaders(req: Request): Record<string, string> {
+  const origin = req.headers.get('origin')
+  
+  const headers: Record<string, string> = {
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  }
+
+  // Verifica se a origem está na whitelist ou é um subdomínio da Vercel
+  const isAllowed = origin && (
+    ALLOWED_ORIGINS.includes(origin) || 
+    origin.endsWith('.vercel.app')
+  )
+
+  if (isAllowed) {
+    headers['Access-Control-Allow-Origin'] = origin
+    headers['Access-Control-Allow-Credentials'] = 'true'
+  }
+  // Se não estiver na whitelist, não adiciona o header Allow-Origin (bloqueado por padrão)
+
+  return headers
 }
 
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: getCorsHeaders(req) })
   }
 
   try {
@@ -21,7 +54,7 @@ serve(async (req) => {
         JSON.stringify({ error: 'Campo obrigatório: image_url' }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
         }
       )
     }
@@ -31,7 +64,7 @@ serve(async (req) => {
         JSON.stringify({ error: 'Campo obrigatório: product_id' }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
         }
       )
     }
@@ -150,7 +183,7 @@ serve(async (req) => {
         }),
         {
           status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
         }
       )
     } catch (error) {
@@ -171,7 +204,7 @@ serve(async (req) => {
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       }
     )
   }

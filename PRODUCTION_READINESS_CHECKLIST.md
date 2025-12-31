@@ -303,3 +303,4 @@ const errorData = await response.json() // Pode falhar se resposta não for JSON
 **Data da revisão:** $(date)
 **Revisado por:** AI Assistant (Tech Lead Sênior / DevOps)
 
+

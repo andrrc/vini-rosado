@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { Upload, X, Loader2, AlertCircle, Sparkles } from 'lucide-react'
+import { Upload, X, Loader2, AlertCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
 interface ImageUploadProps {
@@ -12,9 +12,7 @@ interface ImageItem {
   file: File
   preview: string // URL local do preview
   publicUrl: string | null // URL pública após upload
-  processedUrl: string | null // URL da imagem processada (foto de estúdio)
   uploading: boolean
-  processing: boolean // Processando com OpenAI
   error: string | null
 }
 
@@ -80,9 +78,7 @@ export function ImageUpload({ onImagesChange, generationId }: ImageUploadProps) 
       file,
       preview: URL.createObjectURL(file), // Preview instantâneo
       publicUrl: null,
-      processedUrl: null,
       uploading: false,
-      processing: false,
       error: null,
     }))
 
@@ -114,7 +110,6 @@ export function ImageUpload({ onImagesChange, generationId }: ImageUploadProps) 
                 ...updated[globalIndex],
                 publicUrl,
                 uploading: false,
-                processing: false,
                 error: null,
               }
             }
@@ -136,7 +131,6 @@ export function ImageUpload({ onImagesChange, generationId }: ImageUploadProps) 
               updated[globalIndex] = {
                 ...updated[globalIndex],
                 uploading: false,
-                processing: false,
                 error: error.message || 'Erro ao fazer upload',
               }
             }
@@ -197,11 +191,11 @@ export function ImageUpload({ onImagesChange, generationId }: ImageUploadProps) 
   const retryUpload = async (index: number) => {
     const item = imageItems[index]
     
-    setImageItems(prev => {
-      const updated = [...prev]
-      updated[index] = { ...updated[index], uploading: true, error: null }
-      return updated
-    })
+      setImageItems(prev => {
+        const updated = [...prev]
+        updated[index] = { ...updated[index], uploading: true, error: null }
+        return updated
+      })
 
     try {
       const publicUrl = await uploadImageToStorage(item.file)
@@ -211,7 +205,6 @@ export function ImageUpload({ onImagesChange, generationId }: ImageUploadProps) 
           ...updated[index],
           publicUrl,
           uploading: false,
-          processing: false,
           error: null,
         }
         // Atualizar estado externo com todas as URLs públicas
@@ -228,87 +221,11 @@ export function ImageUpload({ onImagesChange, generationId }: ImageUploadProps) 
         updated[index] = {
           ...updated[index],
           uploading: false,
-          processing: false,
           error: error.message || 'Erro ao fazer upload',
         }
         return updated
       })
       showToast(`Erro ao enviar imagem: ${error.message}`, 'error')
-    }
-  }
-
-  const processImageWithOpenAI = async (index: number) => {
-    const item = imageItems[index]
-    
-    if (!item.publicUrl) {
-      showToast('Faça upload da imagem primeiro', 'error')
-      return
-    }
-
-    setImageItems(prev => {
-      const updated = [...prev]
-      updated[index] = { ...updated[index], processing: true, error: null }
-      return updated
-    })
-
-    try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/process-image-openai`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${supabaseAnonKey}`,
-            'apikey': supabaseAnonKey,
-          },
-          body: JSON.stringify({
-            image_url: item.publicUrl,
-            generation_id: generationId,
-          }),
-        }
-      )
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Erro ao processar imagem')
-      }
-
-      const data = await response.json()
-
-      setImageItems(prev => {
-        const updated = [...prev]
-        updated[index] = {
-          ...updated[index],
-          processedUrl: data.processedUrl,
-          processing: false,
-          error: null,
-        }
-        // Atualizar estado externo: substituir URL original pela processada
-        const allUrls = updated.map((item, idx) => {
-          if (idx === index && data.processedUrl) {
-            return data.processedUrl
-          }
-          return item.publicUrl || item.processedUrl
-        }).filter((url): url is string => url !== null)
-        onImagesChange(allUrls)
-        return updated
-      })
-
-      showToast('Foto de estúdio gerada com sucesso!', 'success')
-    } catch (error: any) {
-      setImageItems(prev => {
-        const updated = [...prev]
-        updated[index] = {
-          ...updated[index],
-          processing: false,
-          error: error.message || 'Erro ao processar imagem',
-        }
-        return updated
-      })
-      showToast(`Erro ao processar imagem: ${error.message}`, 'error')
     }
   }
 
@@ -368,9 +285,9 @@ export function ImageUpload({ onImagesChange, generationId }: ImageUploadProps) 
           {imageItems.map((item, index) => (
             <div key={index} className="relative group">
               <div className="aspect-square rounded-lg overflow-hidden border border-slate-800 bg-slate-900 relative">
-                {/* Imagem sempre visível (processada > pública > preview) */}
+                {/* Imagem sempre visível (pública > preview) */}
                 <img
-                  src={item.processedUrl || item.publicUrl || item.preview}
+                  src={item.publicUrl || item.preview}
                   alt={`Preview ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
@@ -385,37 +302,18 @@ export function ImageUpload({ onImagesChange, generationId }: ImageUploadProps) 
                   </div>
                 )}
 
-                {/* Overlay de Processamento */}
-                {item.processing && !item.uploading && (
-                  <div className="absolute inset-0 bg-slate-900/80 flex items-center justify-center">
-                    <div className="text-center">
-                      <Loader2 className="w-6 h-6 text-purple-400 animate-spin mx-auto mb-2" />
-                      <p className="text-xs text-slate-400">Gerando foto de estúdio...</p>
-                    </div>
-                  </div>
-                )}
-
                 {/* Overlay de Erro */}
-                {item.error && !item.uploading && !item.processing && (
+                {item.error && !item.uploading && (
                   <div className="absolute inset-0 bg-red-900/80 flex items-center justify-center p-2">
                     <div className="text-center">
                       <AlertCircle className="w-6 h-6 text-red-400 mx-auto mb-2" />
                       <p className="text-xs text-red-300 mb-2">{item.error}</p>
-                      {item.publicUrl ? (
-                        <button
-                          onClick={() => processImageWithOpenAI(index)}
-                          className="text-xs bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                        >
-                          Tentar novamente
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => retryUpload(index)}
-                          className="text-xs bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                        >
-                          Tentar novamente
-                        </button>
-                      )}
+                      <button
+                        onClick={() => retryUpload(index)}
+                        className="text-xs bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                      >
+                        Tentar novamente
+                      </button>
                     </div>
                   </div>
                 )}
@@ -424,39 +322,20 @@ export function ImageUpload({ onImagesChange, generationId }: ImageUploadProps) 
               {/* Botão Remover */}
               <button
                 onClick={() => removeImage(index)}
-                disabled={item.uploading || item.processing}
+                disabled={item.uploading}
                 className="absolute top-2 right-2 w-6 h-6 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50"
               >
                 <X className="w-4 h-4 text-white" />
               </button>
-
-              {/* Botão Gerar Foto de Estúdio */}
-              {item.publicUrl && !item.uploading && !item.processing && !item.processedUrl && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    processImageWithOpenAI(index)
-                  }}
-                  className="absolute top-2 left-2 bg-purple-500 hover:bg-purple-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  Nano Banana
-                </button>
-              )}
 
               {/* Status Badge */}
               <div className="absolute bottom-2 left-2 right-2">
                 <p className="text-xs text-slate-300 bg-slate-900/80 rounded px-2 py-1 truncate">
                   {item.file.name}
                 </p>
-                {item.publicUrl && !item.error && !item.processedUrl && (
+                {item.publicUrl && !item.error && (
                   <p className="text-xs text-green-400 bg-green-500/10 rounded px-2 py-1 mt-1">
                     ✓ Enviado
-                  </p>
-                )}
-                {item.processedUrl && (
-                  <p className="text-xs text-purple-400 bg-purple-500/10 rounded px-2 py-1 mt-1">
-                    ✨ Foto de estúdio
                   </p>
                 )}
               </div>

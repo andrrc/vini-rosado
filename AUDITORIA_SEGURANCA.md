@@ -34,8 +34,6 @@ Esta auditoria identificou **15 vulnerabilidades de segurança** distribuídas e
 |----------|--------------|--------------|--------|
 | `/functions/v1/generate-copy` | Alta | Header `apikey` apenas | 🔴 CRÍTICO |
 | `/functions/v1/process-image` | Alta | Header `apikey` apenas | 🔴 CRÍTICO |
-| `/functions/v1/process-image-n8n` | Alta | Header `apikey` apenas | 🔴 CRÍTICO |
-| `/functions/v1/process-image-openai` | Alta | Header `apikey` apenas | 🔴 CRÍTICO |
 | `/functions/v1/hotmart-webhook` | Crítica | Nenhuma | 🔴 CRÍTICO |
 
 ---

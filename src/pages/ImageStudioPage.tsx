@@ -4,10 +4,12 @@ import { ArrowLeft, Image as ImageIcon, Sparkles, AlertCircle, Loader2, Edit2 } 
 import { ImageUpload } from '../components/ImageUpload'
 import { ImageEditor } from '../components/ImageEditor'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../contexts/AuthContext'
 
 export function ImageStudioPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const { session } = useAuth()
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null)
   const [loadingImage, setLoadingImage] = useState(false)
@@ -87,17 +89,25 @@ export function ImageStudioPage() {
     setLoadingImage(true)
 
     try {
+      // Verificar se o usuário está autenticado
+      if (!session?.access_token) {
+        showToast('Você precisa estar autenticado para processar imagens', 'error')
+        setLoadingImage(false)
+        return
+      }
+
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
       const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
       // Enviar imagem original diretamente para a Edge Function
+      // Usar o token JWT da sessão do usuário ao invés da anon key
       const edgeFunctionResponse = await fetch(
         `${supabaseUrl}/functions/v1/process-image`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${supabaseAnonKey}`,
+            'Authorization': `Bearer ${session.access_token}`,
             'apikey': supabaseAnonKey,
           },
           body: JSON.stringify({

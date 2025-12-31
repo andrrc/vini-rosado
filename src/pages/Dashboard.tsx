@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase'
 import { ImageUpload } from '../components/ImageUpload'
 
 export function Dashboard() {
-  const { user, signOut } = useAuth()
+  const { user, signOut, session } = useAuth()
   const [productName, setProductName] = useState('')
   const [features, setFeatures] = useState('')
   const [category, setCategory] = useState('')
@@ -22,7 +22,7 @@ export function Dashboard() {
     try {
       const { data: { session } } = await supabase.auth.getSession()
       
-      if (!session) {
+      if (!session?.access_token) {
         throw new Error('Sessão expirada. Faça login novamente.')
       }
 
@@ -35,7 +35,7 @@ export function Dashboard() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${supabaseAnonKey}`,
+            'Authorization': `Bearer ${session.access_token}`,
             'apikey': supabaseAnonKey,
           },
           body: JSON.stringify({

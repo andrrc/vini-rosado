@@ -14,8 +14,6 @@ Checklist completo para deploy em produção - Revisão técnica rigorosa
 **Arquivos afetados:**
 - `supabase/functions/process-image/index.ts` (linha 9-13)
 - `supabase/functions/generate-copy/index.ts` (linha 9-13)
-- `supabase/functions/process-image-n8n/index.ts` (linha 8-12)
-- `supabase/functions/process-image-openai/index.ts` (linha 8-12)
 
 **Ação obrigatória:**
 ```typescript
@@ -90,7 +88,6 @@ Verificar se TODAS estas variáveis estão configuradas:
 - ❓ `REMOVE_BG_API_KEY` (necessária para `process-image`)
 - ❓ `GEMINI_API_KEY` (necessária para `generate-copy`)
 - ❓ `HOTMART_SECRET` (necessária para `hotmart-webhook`)
-- ❓ `OPENAI_API_KEY` (necessária para `process-image-openai`, se usar)
 - ❓ `RESEND_API_KEY` (necessária para emails do webhook Hotmart, se usar)
 
 ---

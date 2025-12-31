@@ -109,8 +109,6 @@ supabase link --project-ref seu-project-ref
 # Fazer deploy de todas as Edge Functions
 supabase functions deploy generate-copy
 supabase functions deploy process-image
-supabase functions deploy process-image-openai
-supabase functions deploy process-image-n8n
 supabase functions deploy hotmart-webhook
 ```
 
@@ -225,8 +223,6 @@ Mas se você quiser adicionar uma URL específica, edite estes arquivos:
 
 1. `supabase/functions/generate-copy/index.ts`
 2. `supabase/functions/process-image/index.ts`
-3. `supabase/functions/process-image-openai/index.ts`
-4. `supabase/functions/process-image-n8n/index.ts`
 
 Em cada arquivo, encontre a linha com `ALLOWED_ORIGINS` e adicione sua URL:
 
@@ -243,8 +239,6 @@ const ALLOWED_ORIGINS = [
 ```bash
 supabase functions deploy generate-copy
 supabase functions deploy process-image
-supabase functions deploy process-image-openai
-supabase functions deploy process-image-n8n
 ```
 
 **Nota:** O código já foi atualizado para aceitar qualquer subdomínio `.vercel.app` automaticamente, então isso pode não ser necessário. Mas é bom adicionar sua URL específica para maior segurança.

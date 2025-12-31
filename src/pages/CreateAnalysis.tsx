@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Sparkles, Copy, X, AlertCircle, Loader2 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../contexts/AuthContext'
 
 export function CreateAnalysis() {
   const navigate = useNavigate()
+  const { session } = useAuth()
   const [productName, setProductName] = useState('')
   const [features, setFeatures] = useState('')
   const [category, setCategory] = useState('')
@@ -39,6 +41,13 @@ export function CreateAnalysis() {
         throw new Error('Sessão expirada. Faça login novamente.')
       }
 
+      // Verificar se o usuário está autenticado
+      if (!session?.access_token) {
+        setError('Você precisa estar autenticado para gerar copy')
+        setLoadingCopy(false)
+        return
+      }
+
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
       const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
@@ -48,7 +57,7 @@ export function CreateAnalysis() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${supabaseAnonKey}`,
+            'Authorization': `Bearer ${session.access_token}`,
             'apikey': supabaseAnonKey,
           },
           body: JSON.stringify({

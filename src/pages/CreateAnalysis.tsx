@@ -2,11 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Sparkles, Copy, X, AlertCircle, Loader2 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
-import { useAuth } from '../contexts/AuthContext'
 
 export function CreateAnalysis() {
   const navigate = useNavigate()
-  const { session } = useAuth()
   const [productName, setProductName] = useState('')
   const [features, setFeatures] = useState('')
   const [category, setCategory] = useState('')

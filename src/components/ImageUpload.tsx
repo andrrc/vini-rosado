@@ -5,7 +5,6 @@ import { supabase } from '../lib/supabase'
 interface ImageUploadProps {
   images: string[] // URLs públicas finais
   onImagesChange: (urls: string[]) => void
-  generationId?: string // ID da geração (opcional)
 }
 
 interface ImageItem {
@@ -16,7 +15,7 @@ interface ImageItem {
   error: string | null
 }
 
-export function ImageUpload({ onImagesChange, generationId }: ImageUploadProps) {
+export function ImageUpload({ onImagesChange }: ImageUploadProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [imageItems, setImageItems] = useState<ImageItem[]>([])
   const [toast, setToast] = useState<{ message: string; type: 'error' | 'success' } | null>(null)

@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase'
 import { ImageUpload } from '../components/ImageUpload'
 
 export function Dashboard() {
-  const { user, signOut, session } = useAuth()
+  const { user, signOut } = useAuth()
   const [productName, setProductName] = useState('')
   const [features, setFeatures] = useState('')
   const [category, setCategory] = useState('')

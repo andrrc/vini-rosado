@@ -189,7 +189,6 @@ export function ImageStudioPage() {
                 <ImageUpload 
                   images={imageUrls}
                   onImagesChange={setImageUrls}
-                  generationId={analysisId}
                 />
               </div>
               {!analysisId && (

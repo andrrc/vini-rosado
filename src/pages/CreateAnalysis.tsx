@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
 import { ArrowLeft, Sparkles, Copy, X, AlertCircle, Loader2 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 

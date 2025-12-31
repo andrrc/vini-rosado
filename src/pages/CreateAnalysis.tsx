@@ -5,7 +5,6 @@ import { ArrowLeft, Sparkles, Copy, X, AlertCircle, Loader2 } from 'lucide-react
 import { supabase } from '../lib/supabase'
 
 export function CreateAnalysis() {
-  const { user } = useAuth()
   const navigate = useNavigate()
   const [productName, setProductName] = useState('')
   const [features, setFeatures] = useState('')

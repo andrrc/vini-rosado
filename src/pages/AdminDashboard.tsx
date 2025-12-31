@@ -15,7 +15,6 @@ import {
 } from 'lucide-react'
 
 export function AdminDashboard() {
-  const { user, signOut } = useAuth()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({

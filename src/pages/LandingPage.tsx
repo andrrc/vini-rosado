@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Sparkles, Shield, FileText, AlertTriangle, Upload, Check } from 'lucide-react'
+import { Sparkles, Shield, FileText, AlertTriangle, Upload } from 'lucide-react'
 
 export function LandingPage() {
   return (

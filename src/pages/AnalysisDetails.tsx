@@ -12,7 +12,6 @@ export function AnalysisDetails() {
   const [copied, setCopied] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const [toast, setToast] = useState<{ message: string; type: 'error' | 'success' } | null>(null)
 
   const loadGeneration = useCallback(async () => {
     if (!id) return
@@ -184,26 +183,6 @@ export function AnalysisDetails() {
 
   return (
     <div className="min-h-screen bg-[#020617]">
-      {/* Toast Notification */}
-      {toast && (
-        <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-5">
-          <div
-            className={`px-6 py-4 rounded-lg shadow-lg border flex items-center gap-3 ${
-              toast.type === 'error'
-                ? 'bg-red-500/10 border-red-500/30 text-red-400'
-                : 'bg-green-500/10 border-green-500/30 text-green-400'
-            }`}
-          >
-            {toast.type === 'error' ? (
-              <AlertCircle className="w-5 h-5" />
-            ) : (
-              <CheckCircle2 className="w-5 h-5" />
-            )}
-            <span className="font-medium">{toast.message}</span>
-          </div>
-        </div>
-      )}
-
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         {/* Header */}
         <div className="mb-8">

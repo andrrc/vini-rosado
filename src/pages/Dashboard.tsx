@@ -9,25 +9,9 @@ export function Dashboard() {
   const [productName, setProductName] = useState('')
   const [features, setFeatures] = useState('')
   const [category, setCategory] = useState('')
-  const [images, setImages] = useState<File[]>([])
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<{ title: string; description: string } | null>(null)
   const [error, setError] = useState('')
-
-  const convertImagesToBase64 = async (files: File[]): Promise<string[]> => {
-    const promises = files.map(file => {
-      return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => {
-          const result = reader.result as string
-          resolve(result)
-        }
-        reader.onerror = reject
-        reader.readAsDataURL(file)
-      })
-    })
-    return Promise.all(promises)
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -45,11 +29,6 @@ export function Dashboard() {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
       const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-      // Converter imagens para base64 se houver
-      const imageBase64Array = images.length > 0 
-        ? await convertImagesToBase64(images)
-        : []
-
       const response = await fetch(
         `${supabaseUrl}/functions/v1/generate-copy`,
         {
@@ -63,7 +42,6 @@ export function Dashboard() {
             product_name: productName,
             features,
             category,
-            images: imageBase64Array,
           }),
         }
       )
@@ -196,7 +174,9 @@ export function Dashboard() {
             {/* Image Upload */}
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
               <h3 className="text-lg font-semibold text-white mb-4">Upload de Imagens</h3>
-              <ImageUpload images={images} onImagesChange={setImages} />
+              <ImageUpload images={[]} onImagesChange={() => {
+                // Callback para quando imagens forem atualizadas
+              }} />
             </div>
 
             {/* Result */}

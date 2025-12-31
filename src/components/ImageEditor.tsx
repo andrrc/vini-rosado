@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { RotateCw, ZoomIn, ZoomOut, Crop, Download, X, Sliders } from 'lucide-react'
+import { RotateCw, ZoomIn, ZoomOut, Download, X, Sliders } from 'lucide-react'
 
 interface ImageEditorProps {
   imageUrl: string
@@ -15,10 +15,6 @@ export function ImageEditor({ imageUrl, onSave, onClose }: ImageEditorProps) {
   const [contrast, setContrast] = useState(100)
   const [saturation, setSaturation] = useState(100)
   const [rotation, setRotation] = useState(0)
-  const [isCropping, setIsCropping] = useState(false)
-  const [cropStart, setCropStart] = useState({ x: 0, y: 0 })
-  const [cropEnd, setCropEnd] = useState({ x: 0, y: 0 })
-  const [isDragging, setIsDragging] = useState(false)
 
   useEffect(() => {
     if (imageUrl) {

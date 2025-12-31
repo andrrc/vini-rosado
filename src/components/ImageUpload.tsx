@@ -18,7 +18,7 @@ interface ImageItem {
   error: string | null
 }
 
-export function ImageUpload({ images, onImagesChange, generationId }: ImageUploadProps) {
+export function ImageUpload({ onImagesChange, generationId }: ImageUploadProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [imageItems, setImageItems] = useState<ImageItem[]>([])
   const [toast, setToast] = useState<{ message: string; type: 'error' | 'success' } | null>(null)

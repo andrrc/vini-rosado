@@ -12,6 +12,7 @@ export function Dashboard() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<{ title: string; description: string } | null>(null)
   const [error, setError] = useState('')
+  const [imageUrls, setImageUrls] = useState<string[]>([])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -174,9 +175,7 @@ export function Dashboard() {
             {/* Image Upload */}
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 md:p-8">
               <h3 className="text-base sm:text-lg font-semibold text-white mb-4">Upload de Imagens</h3>
-              <ImageUpload images={[]} onImagesChange={() => {
-                // Callback para quando imagens forem atualizadas
-              }} />
+              <ImageUpload images={imageUrls} onImagesChange={setImageUrls} />
             </div>
 
             {/* Result */}

@@ -3,7 +3,7 @@ import { Upload, X, Loader2, AlertCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
 interface ImageUploadProps {
-  images: string[] // URLs públicas finais
+  images?: string[] // URLs públicas finais (opcional, não usado atualmente)
   onImagesChange: (urls: string[]) => void
 }
 

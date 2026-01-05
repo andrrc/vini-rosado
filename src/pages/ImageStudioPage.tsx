@@ -142,49 +142,49 @@ export function ImageStudioPage() {
 
   return (
     <div className="min-h-screen bg-[#020617]">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <button
             onClick={() => navigate('/app')}
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-4"
+            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-3 sm:mb-4 text-sm sm:text-base"
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </button>
-          <h1 className="text-3xl font-bold text-white">Estúdio de Imagem</h1>
-          <p className="text-slate-400 mt-2">Edite e melhore as imagens do seu produto</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Estúdio de Imagem</h1>
+          <p className="text-sm sm:text-base text-slate-400 mt-2">Edite e melhore as imagens do seu produto</p>
         </div>
 
         {/* Toast Notification */}
         {toast && (
-          <div className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-lg flex items-center gap-2 text-sm shadow-lg ${
+          <div className={`fixed top-4 right-4 left-4 sm:left-auto z-50 px-4 py-3 rounded-lg flex items-center gap-2 text-sm shadow-lg ${
             toast.type === 'error'
               ? 'bg-red-500/10 border border-red-500/30 text-red-400'
               : 'bg-green-500/10 border border-green-500/30 text-green-400'
           }`}>
             {toast.type === 'error' ? (
-              <AlertCircle className="w-4 h-4" />
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
             ) : (
-              <Loader2 className="w-4 h-4" />
+              <Loader2 className="w-4 h-4 flex-shrink-0" />
             )}
-            <span>{toast.message}</span>
+            <span className="break-words">{toast.message}</span>
           </div>
         )}
 
         {/* Estúdio de Imagem */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center border border-purple-500/20">
-              <ImageIcon className="w-6 h-6 text-purple-400" />
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 md:p-8">
+          <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500/10 rounded-lg flex items-center justify-center border border-purple-500/20 flex-shrink-0">
+              <ImageIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
             </div>
-            <h2 className="text-2xl font-bold text-white">Estúdio de Imagem</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white">Estúdio de Imagem</h2>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Upload de Imagens */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-4">Upload de Imagens</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Upload de Imagens</h3>
               <div className={!analysisId ? 'opacity-50 pointer-events-none' : ''}>
                 <ImageUpload 
                   images={imageUrls}
@@ -192,7 +192,7 @@ export function ImageStudioPage() {
                 />
               </div>
               {!analysisId && (
-                <p className="text-sm text-slate-400 text-center mt-4">
+                <p className="text-xs sm:text-sm text-slate-400 text-center mt-4">
                   Por favor, crie ou selecione uma análise primeiro.
                 </p>
               )}
@@ -201,19 +201,19 @@ export function ImageStudioPage() {
             {/* Imagem Atual */}
             {currentImageUrl && !editingImage && (
               <div>
-                <h3 className="text-lg font-semibold text-white mb-4">Imagem Atual do Produto</h3>
-                <div className="relative bg-slate-950 border border-slate-800 rounded-lg p-4 mb-4">
+                <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Imagem Atual do Produto</h3>
+                <div className="relative bg-slate-950 border border-slate-800 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
                   <img
                     src={currentImageUrl}
                     alt="Produto"
-                    className="w-full h-auto max-h-96 object-contain rounded-lg mx-auto"
+                    className="w-full h-auto max-h-64 sm:max-h-96 object-contain rounded-lg mx-auto"
                   />
                 </div>
                 <button
                   onClick={() => setEditingImage(currentImageUrl)}
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2"
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 sm:py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
-                  <Edit2 className="w-5 h-5" />
+                  <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />
                   Editar Imagem
                 </button>
               </div>

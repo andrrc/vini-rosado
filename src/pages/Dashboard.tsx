@@ -70,16 +70,16 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#020617]">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-1">Valida AI</h1>
-            <p className="text-slate-400">Olá, {user?.email}</p>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">Valida AI</h1>
+            <p className="text-sm sm:text-base text-slate-400 truncate">Olá, {user?.email}</p>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg transition-colors border border-slate-800"
+            className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg transition-colors border border-slate-800 text-sm sm:text-base whitespace-nowrap"
           >
             <LogOut className="w-4 h-4" />
             Sair
@@ -87,9 +87,9 @@ export function Dashboard() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Left Side - Form */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 md:p-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center border border-blue-500/20">
                 <Sparkles className="w-6 h-6 text-blue-400" />
@@ -170,10 +170,10 @@ export function Dashboard() {
           </div>
 
           {/* Right Side - Image Upload & Result */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Image Upload */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
-              <h3 className="text-lg font-semibold text-white mb-4">Upload de Imagens</h3>
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 md:p-8">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-4">Upload de Imagens</h3>
               <ImageUpload images={[]} onImagesChange={() => {
                 // Callback para quando imagens forem atualizadas
               }} />
@@ -181,23 +181,23 @@ export function Dashboard() {
 
             {/* Result */}
             {result && (
-              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center border border-blue-500/20">
-                      <Copy className="w-6 h-6 text-blue-400" />
+              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 md:p-8">
+                <div className="flex items-center justify-between mb-4 sm:mb-6 gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/10 rounded-lg flex items-center justify-center border border-blue-500/20 flex-shrink-0">
+                      <Copy className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
                     </div>
-                    <h2 className="text-2xl font-bold text-white">Copy Gerado</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold text-white truncate">Copy Gerado</h2>
                   </div>
                   <button
                     onClick={() => setResult(null)}
-                    className="text-slate-400 hover:text-white transition-colors"
+                    className="text-slate-400 hover:text-white transition-colors flex-shrink-0"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-slate-300 mb-2">
                       Título SEO

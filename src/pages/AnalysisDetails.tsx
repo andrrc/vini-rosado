@@ -183,33 +183,34 @@ export function AnalysisDetails() {
 
   return (
     <div className="min-h-screen bg-[#020617]">
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-5xl">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <button
             onClick={() => navigate('/app')}
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-4"
+            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-3 sm:mb-4 text-sm sm:text-base"
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </button>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Detalhes da Análise</h1>
-              <p className="text-slate-400">{formatDate(generation.created_at)}</p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Detalhes da Análise</h1>
+              <p className="text-sm sm:text-base text-slate-400">{formatDate(generation.created_at)}</p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
               {getStatusBadge(generation.status)}
               <button
                 onClick={() => navigate(`/app/estudio-imagem/${generation.id}`)}
-                className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+                className="bg-purple-500 hover:bg-purple-600 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors flex items-center gap-2 text-sm sm:text-base whitespace-nowrap"
               >
                 <ImageIcon className="w-4 h-4" />
-                Estúdio de Imagem
+                <span className="hidden sm:inline">Estúdio de Imagem</span>
+                <span className="sm:hidden">Estúdio</span>
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-4 py-2 rounded-lg transition-colors flex items-center gap-2 border border-red-500/30"
+                className="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 sm:px-4 py-2 rounded-lg transition-colors flex items-center gap-2 border border-red-500/30 text-sm sm:text-base whitespace-nowrap"
               >
                 <Trash2 className="w-4 h-4" />
                 Excluir
@@ -221,12 +222,12 @@ export function AnalysisDetails() {
         {/* Modal de Confirmação de Exclusão */}
         {showDeleteConfirm && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full">
-              <h3 className="text-xl font-bold text-white mb-2">Confirmar Exclusão</h3>
-              <p className="text-slate-400 mb-6">
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-md w-full">
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-2">Confirmar Exclusão</h3>
+              <p className="text-sm sm:text-base text-slate-400 mb-4 sm:mb-6">
                 Tem certeza que deseja excluir esta análise? Esta ação não pode ser desfeita.
               </p>
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
                   className="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg transition-colors border border-slate-700"
@@ -292,10 +293,10 @@ export function AnalysisDetails() {
           </div>
 
           {/* Right Side - Details */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Product Info */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">Informações do Produto</h2>
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6">
+              <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Informações do Produto</h2>
               <div className="space-y-3">
                 <div>
                   <label className="text-sm text-slate-400">Nome do Produto</label>
@@ -318,13 +319,13 @@ export function AnalysisDetails() {
 
             {/* Generated Copy */}
             {generation.status === 'concluido' && (generation.title || generation.description) && (
-              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold text-white">Copy Gerada</h2>
-                  <div className="flex gap-2">
+              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+                  <h2 className="text-base sm:text-lg font-semibold text-white">Copy Gerada</h2>
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <button
                       onClick={handleCopy}
-                      className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 text-sm border border-slate-700"
+                      className="bg-slate-800 hover:bg-slate-700 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm border border-slate-700"
                     >
                       {copied ? (
                         <>
@@ -340,7 +341,7 @@ export function AnalysisDetails() {
                     </button>
                     <button
                       onClick={handleDownload}
-                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 text-sm"
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
                     >
                       <Download className="w-4 h-4" />
                       Download

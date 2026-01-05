@@ -87,9 +87,9 @@ export function ImageEditor({ imageUrl, onSave, onClose }: ImageEditorProps) {
   }
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-white">Editor de Imagem</h3>
+    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6">
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
+        <h3 className="text-base sm:text-lg font-semibold text-white">Editor de Imagem</h3>
         <div className="flex items-center gap-2">
           {onClose && (
             <button
@@ -103,7 +103,7 @@ export function ImageEditor({ imageUrl, onSave, onClose }: ImageEditorProps) {
       </div>
 
       {/* Canvas Area */}
-      <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 mb-4 overflow-auto max-h-96">
+      <div className="bg-slate-950 border border-slate-800 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4 overflow-auto max-h-64 sm:max-h-96">
         <div className="flex justify-center">
           <canvas
             ref={canvasRef}
@@ -114,7 +114,7 @@ export function ImageEditor({ imageUrl, onSave, onClose }: ImageEditorProps) {
       </div>
 
       {/* Controls */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {/* Zoom */}
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center gap-2">
@@ -235,17 +235,17 @@ export function ImageEditor({ imageUrl, onSave, onClose }: ImageEditorProps) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3 pt-4 border-t border-slate-800">
+        <div className="flex flex-col sm:flex-row gap-3 pt-3 sm:pt-4 border-t border-slate-800">
           <button
             onClick={resetFilters}
-            className="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+            className="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
           >
             <Sliders className="w-4 h-4" />
             Resetar
           </button>
           <button
             onClick={handleDownload}
-            className="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+            className="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
           >
             <Download className="w-4 h-4" />
             Download
@@ -253,7 +253,7 @@ export function ImageEditor({ imageUrl, onSave, onClose }: ImageEditorProps) {
           {onSave && (
             <button
               onClick={handleSave}
-              className="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold transition-colors"
+              className="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold transition-colors text-sm sm:text-base"
             >
               Salvar
             </button>

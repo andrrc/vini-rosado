@@ -152,33 +152,33 @@ export function HistoryDashboard() {
 
   return (
     <div className="min-h-screen bg-[#020617]">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl">
         {/* Header */}
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6 sm:mb-8">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
               Olá, bem-vindo! 👋
             </h1>
-            <p className="text-slate-400">
+            <p className="text-sm sm:text-base text-slate-400">
               Crie anúncios perfeitos para seus produtos Shopee
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto">
             {isAdmin && (
               <button
                 onClick={() => navigate('/admin')}
-                className="flex items-center gap-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-4 py-2 rounded-lg transition-colors border border-blue-500/30"
+                className="flex items-center gap-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 sm:px-4 py-2 rounded-lg transition-colors border border-blue-500/30 text-sm sm:text-base"
               >
                 <Shield className="w-4 h-4" />
-                Admin
+                <span className="hidden sm:inline">Admin</span>
               </button>
             )}
-            <div className="text-right">
-              <p className="text-sm text-slate-400">{user?.email}</p>
+            <div className="text-left sm:text-right min-w-0 flex-1 sm:flex-none">
+              <p className="text-xs sm:text-sm text-slate-400 truncate">{user?.email}</p>
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg transition-colors border border-slate-800"
+              className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors border border-slate-800 text-sm sm:text-base whitespace-nowrap"
             >
               <LogOut className="w-4 h-4" />
               Sair
@@ -187,7 +187,7 @@ export function HistoryDashboard() {
         </div>
 
         {/* CTA Buttons */}
-        <div className="mb-8 flex justify-end gap-3">
+        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row justify-end gap-3">
           <button
             onClick={() => {
               // Se houver análises, navegar para o estúdio da primeira, senão mostrar mensagem
@@ -198,37 +198,37 @@ export function HistoryDashboard() {
               }
             }}
             disabled={generations.length === 0}
-            className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 shadow-glow-purple disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto bg-purple-500 hover:bg-purple-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 shadow-glow-purple disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
           >
-            <ImageIcon className="w-5 h-5" />
+            <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5" />
             Editar Imagem
           </button>
           <button
             onClick={() => navigate('/app/nova-analise')}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 shadow-glow-blue"
+            className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 shadow-glow-blue text-sm sm:text-base"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             Nova Análise
           </button>
         </div>
 
         {/* Histórico de Análises */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-white mb-6">Histórico de Análises</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Histórico de Análises</h2>
           
           {generations.length === 0 ? (
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-12 text-center">
-              <p className="text-slate-400 mb-4">Nenhuma análise encontrada</p>
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-8 sm:p-12 text-center">
+              <p className="text-sm sm:text-base text-slate-400 mb-4">Nenhuma análise encontrada</p>
               <button
                 onClick={() => navigate('/app/nova-analise')}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-all inline-flex items-center gap-2"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all inline-flex items-center gap-2 text-sm sm:text-base"
               >
-                <Plus className="w-5 h-5" />
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
                 Criar Primeira Análise
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {generations.map((generation) => {
                 const imageUrl = getImageUrl(generation)
                 

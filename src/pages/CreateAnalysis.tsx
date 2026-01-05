@@ -146,46 +146,46 @@ export function CreateAnalysis() {
 
   return (
     <div className="min-h-screen bg-[#020617]">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <button
             onClick={() => navigate('/app')}
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-4"
+            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-3 sm:mb-4 text-sm sm:text-base"
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </button>
-          <h1 className="text-3xl font-bold text-white">Nova Análise</h1>
-          <p className="text-slate-400 mt-2">Crie uma copy perfeita para seu produto</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Nova Análise</h1>
+          <p className="text-sm sm:text-base text-slate-400 mt-2">Crie uma copy perfeita para seu produto</p>
         </div>
 
         {/* Toast Notification */}
         {toast && (
-          <div className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-lg flex items-center gap-2 text-sm shadow-lg ${
+          <div className={`fixed top-4 right-4 left-4 sm:left-auto z-50 px-4 py-3 rounded-lg flex items-center gap-2 text-sm shadow-lg ${
             toast.type === 'error'
               ? 'bg-red-500/10 border border-red-500/30 text-red-400'
               : 'bg-green-500/10 border border-green-500/30 text-green-400'
           }`}>
             {toast.type === 'error' ? (
-              <AlertCircle className="w-4 h-4" />
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
             ) : (
-              <Loader2 className="w-4 h-4" />
+              <Loader2 className="w-4 h-4 flex-shrink-0" />
             )}
-            <span>{toast.message}</span>
+            <span className="break-words">{toast.message}</span>
           </div>
         )}
 
         {/* Gerador de Copy */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center border border-blue-500/20">
-              <Sparkles className="w-6 h-6 text-blue-400" />
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 md:p-8">
+          <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/10 rounded-lg flex items-center justify-center border border-blue-500/20 flex-shrink-0">
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
             </div>
-            <h2 className="text-2xl font-bold text-white">Gerador de Copy</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white">Gerador de Copy</h2>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div>
               <label htmlFor="productName" className="block text-sm font-medium text-slate-300 mb-2">
                 Nome do Produto
@@ -254,12 +254,12 @@ export function CreateAnalysis() {
 
             {/* Resultado da Copy */}
             {result && (
-              <div className="mt-6 space-y-4 p-6 bg-slate-950 border border-slate-800 rounded-lg">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">Copy Gerada</h3>
+              <div className="mt-4 sm:mt-6 space-y-4 p-4 sm:p-6 bg-slate-950 border border-slate-800 rounded-lg">
+                <div className="flex items-center justify-between mb-4 gap-3">
+                  <h3 className="text-base sm:text-lg font-semibold text-white">Copy Gerada</h3>
                   <button
                     onClick={() => setResult(null)}
-                    className="text-slate-400 hover:text-white transition-colors"
+                    className="text-slate-400 hover:text-white transition-colors flex-shrink-0"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -283,7 +283,7 @@ export function CreateAnalysis() {
                   </div>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => {
                       const text = `${result.title}\n\n${result.description}`

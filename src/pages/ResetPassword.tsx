@@ -35,27 +35,27 @@ export function ResetPassword() {
   }
 
   return (
-    <div className="min-h-screen bg-[#020617] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#020617] flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
+        <div className="text-center mb-6 sm:mb-8">
+          <Link to="/" className="inline-flex items-center gap-2 mb-4 sm:mb-6">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-white">Valida AI</span>
+            <span className="text-xl sm:text-2xl font-bold text-white">Valida AI</span>
           </Link>
         </div>
 
         {/* Reset Password Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-glow-blue-lg">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-glow-blue-lg">
           {success ? (
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/10 rounded-full mb-4 border border-green-500/20">
-                <Mail className="w-8 h-8 text-green-400" />
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-green-500/10 rounded-full mb-3 sm:mb-4 border border-green-500/20">
+                <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-green-400" />
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">Email Enviado!</h1>
-              <p className="text-slate-400 mb-6">
+              <h1 className="text-xl sm:text-2xl font-bold text-white mb-2">Email Enviado!</h1>
+              <p className="text-sm sm:text-base text-slate-400 mb-4 sm:mb-6">
                 Verifique sua caixa de entrada. Enviamos um link para você definir sua senha.
               </p>
               <Link
@@ -67,17 +67,17 @@ export function ResetPassword() {
             </div>
           ) : (
             <>
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-500/10 rounded-full mb-4 border border-blue-500/20">
-                  <Mail className="w-8 h-8 text-blue-400" />
+              <div className="text-center mb-6 sm:mb-8">
+                <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-blue-500/10 rounded-full mb-3 sm:mb-4 border border-blue-500/20">
+                  <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
                 </div>
-                <h1 className="text-2xl font-bold text-white mb-2">Primeiro Acesso?</h1>
-                <p className="text-slate-400">
+                <h1 className="text-xl sm:text-2xl font-bold text-white mb-2">Primeiro Acesso?</h1>
+                <p className="text-sm sm:text-base text-slate-400">
                   Digite seu email para receber um link e definir sua senha
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
                     Email

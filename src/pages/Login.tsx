@@ -38,29 +38,29 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-[#020617] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#020617] flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
+        <div className="text-center mb-6 sm:mb-8">
+          <Link to="/" className="inline-flex items-center gap-2 mb-4 sm:mb-6">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-white">Valida AI</span>
+            <span className="text-xl sm:text-2xl font-bold text-white">Valida AI</span>
           </Link>
         </div>
 
         {/* Login Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-glow-blue-lg">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-500/10 rounded-full mb-4 border border-blue-500/20">
-              <LogIn className="w-8 h-8 text-blue-400" />
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-glow-blue-lg">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-blue-500/10 rounded-full mb-3 sm:mb-4 border border-blue-500/20">
+              <LogIn className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Bem-vindo</h1>
-            <p className="text-slate-400">Faça login para continuar</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Bem-vindo</h1>
+            <p className="text-sm sm:text-base text-slate-400">Faça login para continuar</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
                 Email
@@ -96,8 +96,8 @@ export function Login() {
                 <p className="text-xs text-slate-400">
                   Use o <strong className="text-slate-300">código da transação</strong> que você recebeu por email da Hotmart (ex: HP123456789)
                 </p>
-                <p className="text-xs text-slate-500 mt-1">
-                  Não encontrou? Acesse <a href="https://consumer.hotmart.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">consumer.hotmart.com</a> → Minhas Compras
+                <p className="text-xs text-slate-500 mt-1 break-words">
+                  Não encontrou? Acesse <a href="https://consumer.hotmart.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline break-all">consumer.hotmart.com</a> → Minhas Compras
                 </p>
               </div>
             </div>

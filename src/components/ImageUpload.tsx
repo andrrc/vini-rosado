@@ -253,7 +253,7 @@ export function ImageUpload({ onImagesChange }: ImageUploadProps) {
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
         className={`
-          relative border-2 border-dashed rounded-xl p-12 text-center cursor-pointer
+          relative border-2 border-dashed rounded-xl p-8 sm:p-12 text-center cursor-pointer
           transition-all duration-200
           ${isDragging
             ? 'border-blue-500 bg-blue-500/10 shadow-glow-blue'
@@ -269,18 +269,18 @@ export function ImageUpload({ onImagesChange }: ImageUploadProps) {
           onChange={handleFileSelect}
           className="hidden"
         />
-        <Upload className={`w-12 h-12 mx-auto mb-4 ${isDragging ? 'text-blue-400' : 'text-slate-500'}`} />
-        <p className="text-slate-300 font-medium mb-2">
+        <Upload className={`w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 ${isDragging ? 'text-blue-400' : 'text-slate-500'}`} />
+        <p className="text-sm sm:text-base text-slate-300 font-medium mb-2">
           Arraste suas fotos aqui
         </p>
-        <p className="text-sm text-slate-500">
+        <p className="text-xs sm:text-sm text-slate-500">
           ou clique para selecionar
         </p>
       </div>
 
       {/* Image Previews */}
       {imageItems.length > 0 && (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
           {imageItems.map((item, index) => (
             <div key={index} className="relative group">
               <div className="aspect-square rounded-lg overflow-hidden border border-slate-800 bg-slate-900 relative">
